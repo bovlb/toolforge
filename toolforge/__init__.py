@@ -27,11 +27,11 @@ def connect(dbname, cluster='web', **kwargs):
     Get a database connection for the
     specified wiki
     :param dbname: Database name
-    :param cluster: Database cluster (analytics or web)
+    :param cluster: Database cluster (analytics, labsdb, web, or tools)
     :param kwargs: For pymysql.connect
     :return: pymysql connection
     """
-    assert cluster in ['analytics', 'labsdb', 'web']
+    assert cluster in ['analytics', 'labsdb', 'web', 'tools']
 
     if cluster == 'labsdb':
         domain = 'labsdb'
@@ -41,7 +41,9 @@ def connect(dbname, cluster='web', **kwargs):
     if dbname.endswith('_p'):
         dbname = dbname[:-2]
 
-    if dbname == 'meta':
+    if cluster == 'tools':
+        host = domain
+    elif dbname == 'meta':
         host = 's7.{}'.format(domain)
     else:
         host = '{}.{}'.format(dbname, domain)
